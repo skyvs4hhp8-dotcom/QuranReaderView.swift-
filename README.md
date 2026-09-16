@@ -28,7 +28,6 @@ class QuranRepository: ObservableObject {
     }
     
     func loadMockData() {
-        // İlkin demo məlumatlar
         activeAyahs = [
             Ayah(surahNumber: 1, ayahNumber: 1, textArabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", translation: "Mərhəmətli və Rəhmli Allahın adı ilə.", isArchived: false),
             Ayah(surahNumber: 1, ayahNumber: 2, textArabic: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ", translation: "Həmd olsun Allaha, aləmlərin Rəbbinə.", isArchived: false)
@@ -40,13 +39,11 @@ class QuranRepository: ObservableObject {
         ]
     }
     
-    // Ayə əlavə etmə
     func addAyah(surah: Int, number: Int, arabic: String, translation: String) {
         let newAyah = Ayah(surahNumber: surah, ayahNumber: number, textArabic: arabic, translation: translation)
         activeAyahs.append(newAyah)
     }
     
-    // Təkrar əlavə etmə (Dublikat)
     func duplicateAyah(id: UUID) {
         if let ayah = activeAyahs.first(where: { $0.id == id }) {
             let duplicated = Ayah(surahNumber: ayah.surahNumber, ayahNumber: ayah.ayahNumber, textArabic: ayah.textArabic, translation: ayah.translation, isArchived: ayah.isArchived)
@@ -54,32 +51,27 @@ class QuranRepository: ObservableObject {
         }
     }
     
-    // Ayə silmə
     func deleteAyah(id: UUID) {
         activeAyahs.removeAll { $0.id == id }
     }
     
-    // Kopyalama məzmunu
     func copyAyahContent(id: UUID) -> String {
         guard let ayah = activeAyahs.first(where: { $0.id == id }) else { return "" }
         return "[\(ayah.surahNumber):\(ayah.ayahNumber)] \(ayah.textArabic)\n\(ayah.translation)"
     }
     
-    // Arxivə yükləmə
     func archiveAyah(id: UUID) {
         if let index = activeAyahs.firstIndex(where: { $0.id == id }) {
             activeAyahs[index].isArchived.toggle()
         }
     }
     
-    // Arxivdən bərpa etmə
     func restoreArchivedAyahs() {
         for index in activeAyahs.indices {
             activeAyahs[index].isArchived = false
         }
     }
     
-    // Rəqəmlə ayə axtarışı
     var filteredAyahs: [Ayah] {
         if searchText.isEmpty {
             return activeAyahs
@@ -124,7 +116,7 @@ struct QuranReaderView: View {
                     .padding(.horizontal, 20)
                     .padding(.top, 10)
                     
-                    // Surə Statusları (Hazır / İçi Boş indikatorları)
+                    // Surə Statusları (Hazır / İçi Boş)
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
                             ForEach(vm.surahs) { surah in
@@ -173,7 +165,7 @@ struct QuranReaderView: View {
                                 )
                             }
                             
-                            // Müəllif hissəsi
+                            // Müəllif
                             VStack(spacing: 4) {
                                 Text("Müəllif: Ağa Babayev")
                                     .font(.caption)
